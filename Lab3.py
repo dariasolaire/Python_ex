@@ -15,6 +15,7 @@ d) список учебной группы."""
 
 
 class Student:
+    university='БГУ'
     def __init__(self,
                  id='0',
                  surname='0',
@@ -36,11 +37,16 @@ class Student:
         self.__faculty = faculty
         self.__course = course
         self.__group = group
-
+        print('Вызван конструктор __init__')
 
     def __del__(self):  # Деструктор класса
         print('Вызван метод __del__()')
 
+    def __setattr__(self, attr, value):
+        if attr != 'БГУ':
+            self.__dict__[attr] = value
+        else:
+            raise AttributeError
 
     def get_id(self):
         return self.__id
@@ -105,10 +111,32 @@ class Student:
 
 Student_list = [
     Student('0001', 'Иванов', 'Василий', 'Павлович', '01.12.1999', 'РБ, г.Витебск, Октябрьская, 5', '80291111111',
-            'Факультет математики', '4', '402'),
+            'математики', '4', '402'),
     Student('0015', 'Рыжова', 'Алиса', 'Михайловна', '02.10.2000', 'РБ, г.Минск, Захарова, 8', '80442559865',
-            'Факультет естетвознания', '3', '301'),
+            'естетвознания', '3', '301'),
     Student('0108', 'Болотников', 'Андрей', 'Заирович', '05.05.2001', 'РБ, г.Минск, Харьковская, 25', '804425552147',
-            'Факультет информатики', '3', '303')
+            'информатики', '3', '303'),
+    Student('0025', 'Котькина', 'Анна', 'Степановна', '09.12.1999', 'РБ, г.Могилев, Советская, 12', '8029115891',
+            'математики', '4', '402'),
+    Student('0030', 'Инина', 'Ирина', 'Игоревна', '02.05.2000', 'РБ, г.Минск, Одинцова, 8', '80442559865',
+            'естетвознания', '3', '301'),
+    Student('0205', 'Бобов', 'Мурад', 'Тахирович', '05.08.2001', 'РБ, г.Минск, Харьковская, 25', '804425552147',
+            'информатики', '3', '303')
 ]
 
+def print_list(obj_list, param):
+    if len(obj_list) > 0:
+        print(f'Результат по критерию "{param}":')
+        for obj in obj_list:
+            print(obj.get_id(), obj.get_surnsme(), obj.get_name(), obj.get_last_name(), obj.get_date_birthday(), obj.get_adress(), obj.get_phone_number(), obj.get_faculy(), obj.get_group(), obj.get_course())
+        return
+
+def show_result(arg, lambda_exp):
+    filter_result = list(filter(lambda_exp, Student_list))
+    print_list(filter_result, arg) if len(filter_result) > 0 else print('Данных по запросу не найдено')
+
+group_request = input('Введите номер группы: \n')
+show_result(group_request, lambda x: x.get_group() == group_request)
+
+faculty_request = input('Введите интересующий факультет: \n')
+show_result(faculty_request, lambda x: x.get_faculty() == faculty_request)
